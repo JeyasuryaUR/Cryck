@@ -7,6 +7,8 @@
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.2",
     "@rainbow-me/rainbowkit": "^2.0.4",
+    "@tanstack/react-query": "^5.28.9",
+    "viem": "^2.9.5",
     "wagmi": "^2.5.13"
   }
 }

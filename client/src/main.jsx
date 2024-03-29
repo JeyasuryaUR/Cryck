@@ -3,47 +3,37 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 
-// Wallet imports
-import "@rainbow-me/rainbowkit/styles.css";
+import '@rainbow-me/rainbowkit/styles.css';
 import {
-  getDefaultWallets,
+  getDefaultConfig,
   RainbowKitProvider,
-} from "@rainbow-me/rainbowkit";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { sepolia } from "wagmi/chains";
-import { publicProvider } from "wagmi/providers/public";
+} from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from 'wagmi';
+import {
+  coreDao,
+} from 'wagmi/chains';
+import {
+  QueryClientProvider,
+  QueryClient,
+} from "@tanstack/react-query";
 
-
-// Walet Config
-const { chains, publicClient } = configureChains(
-  // TODO CHANGE TO REQUIRED NETWORK(OPTIONAL)
-  [sepolia],
-  [publicProvider()],
-);
-
-const { connectors } = getDefaultWallets({
-  // TODO : ADD YOUR PROJECT ID AND APP NAME FROM CONNECT-WALLET
-  appName: "YOUR_PROJECT_NAME",
-  projectId: "YOUR_PROJECT_ID",
-  chains,
+const config = getDefaultConfig({
+  appName: 'Cryck',
+  projectId: 'fe112a459de722551c0e0e651a7522e9',
+  chains: [coreDao],
+  ssr: true, // If your dApp uses server side rendering (SSR)
 });
 
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-});
-
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <WagmiConfig config={wagmiConfig}>
-    <RainbowKitProvider
-      chains={chains}
-      modalSize="compact"
-    >
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    </RainbowKitProvider>
-  </WagmiConfig>,
+  <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>,
 )
