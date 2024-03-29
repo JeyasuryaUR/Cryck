@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import MatchCard from "../components/MatchCard";
+import MintRedeemInterface from "../components/MintRedeemInterface";
 
 const MatchBet = () => {
   const [selectedTab, setSelectedTab] = useState("Your Bet");
@@ -33,7 +34,7 @@ const MatchBet = () => {
     const selectedOption = predictionZoneMap.find(option => option.prediction === selectedPrediction && option.zone === selectedZone);
 
     if (selectedOption) {
-      
+
       //console.log(`The id for prediction ${selectedPrediction} and zone ${selectedZone} is ${selectedOption.id}`);
     } else {
       //console.log(`No option found for prediction ${selectedPrediction} and zone ${selectedZone}`);
@@ -47,14 +48,17 @@ const MatchBet = () => {
       </div>
       <div className="w-[50%] bg-black">
         <div className="flex w-full bg-gray-900">
-          <div className="w-[50%]" onClick={() => setSelectedTab("Next Bet")}>
-            <p className={`text-center text-white ${selectedTab === "Next Bet" ? "bg-gray-700" : ""}`}>Your Bet</p>
+          <div className="w-[33%]" onClick={() => setSelectedTab("Next Bet")}>
+            <p className={`text-center text-white ${selectedTab === "Next Bet" ? "bg-gray-700" : ""}`}>Next Bet</p>
           </div>
-          <div className="w-[50%]" onClick={() => setSelectedTab("Your Bet")}>
-            <p className={`text-center text-white ${selectedTab === "Your Bet" ? "bg-gray-700" : ""}`}>Next Bet</p>
+          <div className="w-[33%]" onClick={() => setSelectedTab("Your Bet")}>
+            <p className={`text-center text-white ${selectedTab === "Your Bet" ? "bg-gray-700" : ""}`}>Your Bet</p>
+          </div>
+          <div className="w-[33%]" onClick={() => setSelectedTab("Mint CRC")}>
+            <p className={`text-center text-white ${selectedTab === "Mint CRC" ? "bg-gray-700" : ""}`}>Mint Coins</p>
           </div>
         </div>
-        {selectedTab === "Your Bet" && (
+        {selectedTab === "Next Bet" && (
           <div className="h-[500px] bg-black text-white">
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
@@ -112,10 +116,13 @@ const MatchBet = () => {
             </form>
           </div>
         )}
-        {selectedTab === "Next Bet" && (
+        {selectedTab === "Your Bet" && (
           <div className="h-[500px]">
             {/* Next Bet content goes here */}
           </div>
+        )}
+        {selectedTab === "Mint CRC" && (
+          <MintRedeemInterface />
         )}
       </div>
     </div>

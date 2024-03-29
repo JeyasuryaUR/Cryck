@@ -99,6 +99,11 @@ contract Cryck is ERC20,Ownable {
     //     // at the end loop again and send the total losers amount to reward part of to people with isWon 
     // }
 
+        }
+    }
+
+
+}
     function _calculateRewards(uint256 _betId) internal {
         uint256 correctOptionId = betIdToAnswers[_betId];
         uint256 totalLoserBetAmount = 0;
@@ -132,8 +137,3 @@ contract Cryck is ERC20,Ownable {
             if (bet.betId == _betId && bet.betOption == correctOptionId) {
                 bet.reward += rewardPerWinner; // Add the calculated reward
             }
-        }
-    }
-
-
-}

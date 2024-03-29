@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0x949EeF6D73417ce4792ed611eC1c13165EC40C5E";
+export const CONTRACT_ADDRESS = "0x7586049609A8CBe1dFeaAaF1c63BDC05DE81A887";
 export const CONTRACT_ABI = [
 	{
 		"inputs": [],
@@ -80,6 +80,19 @@ export const CONTRACT_ABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "ethAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "convertCRCToEth",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "spender",
 				"type": "address"
@@ -126,21 +139,14 @@ export const CONTRACT_ABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "mintCoins",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "tokenAmount",
+				"name": "CRCAmount",
 				"type": "uint256"
 			}
 		],
-		"name": "mintEthBack",
+		"name": "mintCoins",
 		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
