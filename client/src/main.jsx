@@ -1,7 +1,10 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import Home from "./pages/Home.jsx";
+import MatchBet from "./pages/MatchBet.jsx";
+import "./index.css";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import '@rainbow-me/rainbowkit/styles.css';
 import {
@@ -39,14 +42,31 @@ const config = getDefaultConfig({
 
 const queryClient = new QueryClient();
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/match",
+        element: <MatchBet />,
+      },
+    ],
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
+    <QueryClientProvider client={queryClient}>
+      <RainbowKitProvider>
         <React.StrictMode>
-          <App />
+          <RouterProvider router={router} />
         </React.StrictMode>
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>,
-)
+      </RainbowKitProvider>
+    </QueryClientProvider>
+  </WagmiProvider>
+);

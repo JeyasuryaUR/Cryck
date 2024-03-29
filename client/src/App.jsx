@@ -1,14 +1,13 @@
 import Header from "./components/Header";
-import MatchBet from "./pages/MatchBet";
-import Home from "./pages/Home";
-import React from "react";
+import { Outlet } from "react-router-dom";
 
 const App = () => {
   return (
     <div className="">
       <Header />
-      <Home />
-      {/* <MatchBet /> */}
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
 };
