@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { background } from "../assets";
 
 const Home = () => {
@@ -16,9 +17,12 @@ const Home = () => {
         <div className="mt-16 text-4xl text-center underline  tracking-[2.9px] max-md:mt-10 max-md:max-w-full">
           Earn crypto rewards for correct predictions
         </div>
-        <div className="justify-center p-6 mt-12 text-xl font-bold leading-6 border border-white border-solid rounded-[113.173px] max-md:px-5 max-md:mt-10">
+        <Link
+          to="/match"
+          className="justify-center p-6 mt-12 text-xl font-bold leading-6 border border-white border-solid rounded-[113.173px] max-md:px-5 max-md:mt-10"
+        >
           Start Playing
-        </div>
+        </Link>
       </div>
     </div>
   );
