@@ -3,5 +3,10 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "hardhat": "^2.22.2"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2",
+    "@rainbow-me/rainbowkit": "^2.0.4",
+    "wagmi": "^2.5.13"
   }
 }

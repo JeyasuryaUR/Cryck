@@ -1,8 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import MatchCard from "../components/MatchCard";
 
 const MatchBet = () => {
   const [selectedTab, setSelectedTab] = useState("Your Bet");
+
+  const predictions = ["4", "6", "W"];
+  const zones = Array.from({length: 14}, (_, i) => (i + 1).toString());
+
+  let id = 1;
+  const predictionZoneMap = [];
+
+  for (let prediction of predictions) {
+    for (let zone of zones) {
+      predictionZoneMap.push({
+        id: id++,
+        prediction,
+        zone
+      });
+    }
+  }
+  //console.log(predictionZoneMap);
+
+  const predictionRef = useRef();
+  const zoneRef = useRef();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const selectedPrediction = predictionRef.current.value;
+    const selectedZone = zoneRef.current.value;
+
+    const selectedOption = predictionZoneMap.find(option => option.prediction === selectedPrediction && option.zone === selectedZone);
+
+    if (selectedOption) {
+      
+      //console.log(`The id for prediction ${selectedPrediction} and zone ${selectedZone} is ${selectedOption.id}`);
+    } else {
+      //console.log(`No option found for prediction ${selectedPrediction} and zone ${selectedZone}`);
+    }
+  };
 
   return (
     <div className="flex bg-black">
@@ -20,7 +56,7 @@ const MatchBet = () => {
         </div>
         {selectedTab === "Your Bet" && (
           <div className="h-[500px] bg-black text-white">
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="ballNumber" className="block text-sm font-medium text-white">Ball Number</label>
                 <select
@@ -41,6 +77,7 @@ const MatchBet = () => {
               <div>
                 <label htmlFor="prediction" className="block text-sm font-medium text-white">Prediction</label>
                 <select
+                  ref={predictionRef}
                   id="prediction"
                   required
                   className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-white"
@@ -55,6 +92,7 @@ const MatchBet = () => {
               <div>
                 <label htmlFor="zone" className="block text-sm font-medium text-white">Zone</label>
                 <select
+                  ref={zoneRef}
                   id="zone"
                   required
                   className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-white"
