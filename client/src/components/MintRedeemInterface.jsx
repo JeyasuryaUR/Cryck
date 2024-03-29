@@ -6,6 +6,8 @@ function MintRedeemInterface() {
     const [isMinting, setIsMinting] = useState(true);
     const [CRC, setCRC] = useState(0)
     const [tCore, setTCore] = useState(0);
+    const [mintInput, setMintInput] = useState(0);
+    const [redeemInput, setRedeemInput] = useState(0);
     let web3 = new Web3(window.ethereum);
 
     const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
@@ -24,27 +26,16 @@ function MintRedeemInterface() {
         })
     },[]);
 
-    const handleInputChange = (event) => {
-        const value = event.target.value;
-        if(isMinting){
-            setCRC(value*1000);
-        } else {
-            setTCore(value/1000)
-        }
-    };
-
-    const handleMint = async () => {
+    const handleMint = async (CRCAmount) => {
         const accounts = await window.ethereum.enable();
         const account = accounts[0];
-        const ethAmount = web3.utils.toWei(CRC.toString(), 'ether'); 
-        await contract.methods.mintCoins().send({ from: account, value: ethAmount });
+        await contract.methods.mintCoins(CRCAmount).send({ from: account });
     };
 
-    const handleRedeem = async () => {
+    const handleRedeem = async (ethAmount) => {
         const accounts = await window.ethereum.enable();
         const account = accounts[0];
-        const tokenAmount = web3.utils.toWei(tCore.toString(), 'ether'); 
-        await contract.methods.mintEthBack(tokenAmount).send({ from: account });
+        await contract.methods.convertCRCToEth(ethAmount).send({ from: account });
     };
 
     return (
@@ -63,11 +54,11 @@ function MintRedeemInterface() {
                     <div className='flex items-center mt-2'>
                         <input 
                             type='number' 
-                            onChange={handleInputChange} 
-                            placeholder='Enter the amount of tCORE to mint CRC'
+                            placeholder='Enter the amount CRC to mint'
                             className='p-2 border rounded mr-2 flex-grow text-black'
+                            onChange={e => setMintInput(e.target.value)}
                         />
-                        <button onClick={handleMint} className='p-2 bg-green-500 text-white rounded'>Mint Coins</button>
+                        <button onClick={() => handleMint(CRC)} className='p-2 bg-green-500 text-white rounded'>Mint Coins</button>
                     </div>
                 )}
             </div>
@@ -80,10 +71,11 @@ function MintRedeemInterface() {
                     <div className='flex items-center mt-2'>
                         <input 
                             type='number' 
-                            placeholder='Enter the amount of CRC to redeem for tCORE'
+                            placeholder='Enter the amount tCORE to redeem'
                             className='p-2 border rounded mr-2 flex-grow text-black'
+                            onChange={e => setRedeemInput(e.target.value)}
                         />
-                        <button onClick={handleRedeem} className='p-2 bg-blue-500 text-white rounded'>Redeem</button>
+                        <button onClick={() => handleRedeem(tCore)} className='p-2 bg-blue-500 text-white rounded'>Redeem</button>
                     </div>
                 )}
             </div>
