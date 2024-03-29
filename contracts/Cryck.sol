@@ -24,27 +24,31 @@ contract Cryck is ERC20,Ownable {
     uint256 public totalBets;
     uint256 public constant TOTAL_OPTIONS = 43;
 
-    constructor() ERC20("Cryck","CRC") {
+    constructor() ERC20("Cryck","CRC"){
         // can bet for first 6 balls
         totalBets=6;
     }
 
-    function mintCoins() external payable{
-        uint256 ethAmount = msg.value;
-        require(ethAmount > 0,"Sent 0 ETH for coins");
-        uint256 tokensToMint = (msg.value * TOKENS_PER_ETH) / 1 ether;
-        _mint(msg.sender,tokensToMint);
+    function mintCoins(uint256 CRCAmount) external payable{
+        require(CRCAmount > 0, "Requested CRC amount must be greater than 0");
+        uint256 requiredEth = (CRCAmount * 1 ether) / TOKENS_PER_ETH;
+        require(msg.value >= requiredEth, "Not enough ETH sent");
+
+        _mint(msg.sender,CRCAmount);
     }
 
-    function mintEthBack(uint256 tokenAmount) external payable{
-        require(tokenAmount > 0, "Amount must be greater than 0");
-        require(balanceOf(msg.sender) >= tokenAmount, "Insufficient token balance");
-        uint256 ethToReturn = tokenAmount * 1 ether / TOKENS_PER_ETH;
-        _burn(msg.sender, tokenAmount);
-        payable(msg.sender).transfer(ethToReturn);
+    function convertCRCToEth(uint256 ethAmount) external {
+        require(ethAmount > 0, "ETH amount must be greater than 0");
+        uint256 requiredCRCTokens = ethAmount * TOKENS_PER_ETH;
+        
+        require(balanceOf(msg.sender) >= requiredCRCTokens, "Insufficient CRC token balance");
+        require(address(this).balance >= ethAmount, "Contract does not have enough ETH");
+
+        _burn(msg.sender, requiredCRCTokens);
+        payable(msg.sender).transfer(ethAmount);
     }
 
-    function bet(uint256 _betAmount,uint256 _betId,uint256 _betOption) external{
+    function bet(uint256 _betAmount,uint256 _betId,uint256 _betOption) external {
         require(betIdToAnswers[_betId]>0,"Bet is over");
         require(balanceOf(msg.sender) >= _betAmount, "Insufficient tokens for the bet");
 
@@ -91,19 +95,6 @@ contract Cryck is ERC20,Ownable {
         return true;
     }
 
-    // function _calculateRewards(uint256 _betId) internal {
-    //     // loop over betIdToAddress[_betId]
-    //     // get the Bet from userBet of each address and check if the optionId and betIdToAnswers[_betId] matches
-    //     // if yes put isWon as true;
-    //     // keep track of total losers amount
-    //     // at the end loop again and send the total losers amount to reward part of to people with isWon 
-    // }
-
-        }
-    }
-
-
-}
     function _calculateRewards(uint256 _betId) internal {
         uint256 correctOptionId = betIdToAnswers[_betId];
         uint256 totalLoserBetAmount = 0;
@@ -137,3 +128,6 @@ contract Cryck is ERC20,Ownable {
             if (bet.betId == _betId && bet.betOption == correctOptionId) {
                 bet.reward += rewardPerWinner; // Add the calculated reward
             }
+        }
+    }
+}
