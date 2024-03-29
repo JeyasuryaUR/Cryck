@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.24;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
@@ -24,7 +24,7 @@ contract Cryck is ERC20,Ownable {
     uint256 public totalBets;
     uint256 public constant TOTAL_OPTIONS = 43;
 
-    constructor() ERC20("Cryck","CRC") Ownable(msg.sender) {
+    constructor() ERC20("Cryck","CRC") {
         // can bet for first 6 balls
         totalBets=6;
     }

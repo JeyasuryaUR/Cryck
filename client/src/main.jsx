@@ -17,10 +17,23 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
+const coreDaoTestnet = {
+  id: 1115,
+  name: 'Core Chain TestNet',
+  nativeCurrency: { name: 'tCORE', symbol: 'tCORE', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://rpc.test.btcs.network'] },
+  },
+  blockExplorers: {
+    default: { name: 'CoreDaoTestnet', url: 'https://scan.test.btcs.network' },
+  },
+  
+};
+
 const config = getDefaultConfig({
   appName: 'Cryck',
   projectId: 'fe112a459de722551c0e0e651a7522e9',
-  chains: [coreDao],
+  chains: [coreDaoTestnet],
   ssr: true, // If your dApp uses server side rendering (SSR)
 });
 
