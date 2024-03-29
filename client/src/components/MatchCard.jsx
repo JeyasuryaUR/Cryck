@@ -1,8 +1,22 @@
-import React from "react"
+import React, { useEffect, useState } from "react";
+import { response } from "../assets/response";
 
 const MatchCard = () => {
-    return (
-        <div className="shrink-0 self-stretch m-auto border-blue-900 border-solid border-[5px] h-[594px] rounded-[39px] w-[396px] max-md:mt-10">
+  const [commentary, setCommentary] = useState(response[0].commentary);
+  const [score, setScore] = useState(response[0].score);
+
+  useEffect(() => {
+    let i = 0;
+    const interval = setInterval(() => {
+      i = i === response.length - 1 ? 0 : i + 1;
+      setCommentary(response[i].commentary);
+      setScore(response[i].score);
+    }, 20000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="shrink-0 self-stretch m-auto border-blue-900 border-solid border-[5px] rounded-[39px] w-[396px] max-md:mt-10">
       <div className="flex relative gap-0.5 mt-10 ml-6 max-md:mt-10 max-md:ml-2.5">
         <div className="flex flex-col text-white">
           <div className="flex gap-2.5">
@@ -11,7 +25,7 @@ const MatchCard = () => {
                 Mi
               </div>
               <div className="mt-6 text-3xl border border-white border-solid tracking-[2.53px]">
-                132/4
+                {score}
               </div>
               <div className="mt-1.5 text-xl">9.4/20</div>
             </div>
@@ -20,7 +34,10 @@ const MatchCard = () => {
                 Match 23 (Wankhede Stadium)
               </div>
               <div className="mt-7 text-sm font-light">
-                Need 70 runs in 62 balls
+                Need{" "}
+                {Number(response[0].target.split("/")[0]) -
+                  Number(score.split("/")[0])}{" "}
+                runs in 62 balls
               </div>
               <div className="mt-3 text-xs">Target : 202</div>
             </div>
@@ -34,7 +51,7 @@ const MatchCard = () => {
         <div className="flex flex-col self-start whitespace-nowrap text-neutral-300">
           <div className="self-center text-2xl tracking-[2px]">gt</div>
           <div className="mt-6 text-3xl text-white border border-white border-solid tracking-[2.53px]">
-            201/8
+            {response[0].target}
           </div>
           <div className="mt-1.5 text-xl text-white">20/20</div>
           <div className="mt-9 text-base tracking-widest text-right">
@@ -48,17 +65,12 @@ const MatchCard = () => {
         <div className="self-center text-3xl border-0 border-white border-solid tracking-[2.26px]">
           Commentary
         </div>
-        <div className="justify-center py-1.5 mt-6 text-lg bg-white">
-          Allrounder Hardik Pandya's calling cards brisk seam bowling and
-          powerful ball-striking marked by the ability to hit sixes from the
-          first ball.
-          <br />
-          Hardik, who plays his domestic cricket for Baroda, first caught the
-          eye with an unbeaten 31-ball 61 for Mumbai Indians{" "}
+        <div className="justify-center py-1.5 mt-6 text-lg bg-black">
+          {commentary}
         </div>
       </div>
     </div>
-    );
-}
+  );
+};
 
 export default MatchCard;
