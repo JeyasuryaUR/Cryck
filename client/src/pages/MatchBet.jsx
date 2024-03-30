@@ -1,11 +1,20 @@
 import React, { useState, useRef } from "react";
 import MatchCard from "../components/MatchCard";
 import MintRedeemInterface from "../components/MintRedeemInterface";
-import { useParams } from "react-router-dom";
+import { useReadContract, useWriteContract } from "wagmi";
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
+import Web3 from 'web3'
 
 const MatchBet = () => {
-  // const [matchData, setMatchData] = useState({})
   const [selectedTab, setSelectedTab] = useState("Your Bet");
+  const [betAmount, setBetAmount] = useState();
+  const {writeContract,error,status} = useWriteContract();
+
+  const totalBets = useReadContract({
+    abi:CONTRACT_ABI,
+    address:CONTRACT_ADDRESS,
+    functionName: 'totalBets',
+  });
 
   const predictions = ["4", "6", "W"];
   const zones = Array.from({length: 14}, (_, i) => (i + 1).toString());
@@ -25,20 +34,33 @@ const MatchBet = () => {
 
   const predictionRef = useRef();
   const zoneRef = useRef();
+  const ballRef = useRef();
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    const betAmountInWei = Web3.utils.toBigInt(betAmount);
     const selectedPrediction = predictionRef.current.value;
     const selectedZone = zoneRef.current.value;
+    const selectedBall = ballRef.current.value;
 
-    const selectedOption = predictionZoneMap.find(option => option.prediction === selectedPrediction && option.zone === selectedZone);
+    const selectedOption = (predictionZoneMap.find(option => option.prediction === selectedPrediction && option.zone === selectedZone));
 
     if (selectedOption) {
+      const betId = (Number(totalBets.data) - 6 + parseInt(selectedBall)) ; 
+      if(error){
+        alert(error.cause.reason)
+      }
 
-      //console.log(`The optId for prediction ${selectedPrediction} and zone ${selectedZone} is ${selectedOption.optId}`);
+      writeContract({ 
+        abi:CONTRACT_ABI,
+        address: CONTRACT_ADDRESS,
+        functionName: 'bet',
+        args: [betAmountInWei,betId,selectedOption.optId],
+     })
     } else {
-      //console.log(`No option found for prediction ${selectedPrediction} and zone ${selectedZone}`);
+      console.log('Yoo')
     }
   };
 
@@ -59,24 +81,26 @@ const MatchBet = () => {
             <p className={`text-center text-white ${selectedTab === "Mint CRC" ? "bg-gray-700" : ""}`}>Mint Coins</p>
           </div>
         </div>
-          <img src="/zones.png" width={600} className="mx-auto my-1" alt="Field Image for reference" />
         {selectedTab === "Next Bet" && (
-          <div className="h-[500px] bg-black text-white">
+          
+          <div className="h-full bg-black text-white">
+          <img src="/zones.png" width={600} className="mx-auto my-1" alt="Field Image for reference" />
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="ballNumber" className="block text-sm font-medium text-white">Ball Number</label>
                 <select
                   id="ballNumber"
                   required
+                  ref={ballRef}
                   className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-white"
                 >
                   <option value="">Select Ball Number</option>
-                  <option value="1">Ball 1</option>
-                  <option value="2">Ball 2</option>
-                  <option value="3">Ball 3</option>
-                  <option value="4">Ball 4</option>
-                  <option value="5">Ball 5</option>
-                  <option value="6">Ball 6</option>
+                  <option value='0'>Ball 1</option>
+                  <option value="1">Ball 2</option>
+                  <option value="2">Ball 3</option>
+                  <option value="3">Ball 4</option>
+                  <option value="4">Ball 5</option>
+                  <option value="5">Ball 6</option>
                 </select>
               </div>
 
@@ -119,6 +143,13 @@ const MatchBet = () => {
                   <option value="13">Zone 13</option>
                   <option value="14">Zone 14</option>
                 </select>
+
+                <input 
+                placeholder="Amount of CRC to bet" 
+                type="number"
+                className='p-2 border rounded my-5 flex-grow bg-gray-700 border-gray-300 text-white outline-none w-full'
+                onChange={(e)=>setBetAmount(e.target.value)}
+               />
               </div>
 
               <button type="submit" className="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-black bg-indigo-400 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -141,3 +172,4 @@ const MatchBet = () => {
 };
 
 export default MatchBet;
+

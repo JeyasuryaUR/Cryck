@@ -2,7 +2,7 @@ import React from "react";
 import { response } from "../data";
 
 const MatchCard = () => {
-  console.log(response);
+  // console.log(response);
   return (
     <div className="shrink-0 self-stretch m-auto border-blue-900 border-solid border-[5px] h-[594px] rounded-[39px] w-[396px] max-md:mt-10">
       <div className="flex relative gap-0.5 mt-10 ml-6 max-md:mt-10 max-md:ml-2.5">
@@ -51,7 +51,7 @@ const MatchCard = () => {
           Commentary
         </div>
         <div className="justify-center py-1.5 mt-6 text-lg bg-black">
-          {commentary}
+          {/* {commentary} */}Yoo
         </div>
       </div>
     </div>
