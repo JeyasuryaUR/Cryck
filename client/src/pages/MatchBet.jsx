@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 const MatchBet = () => {
   const { id } = useParams();
   console.log(id);
-  const [matchData, setMatchData] = useState({})
+  // const [matchData, setMatchData] = useState({})
   const [selectedTab, setSelectedTab] = useState("Your Bet");
 
   const predictions = ["4", "6", "W"];
@@ -25,14 +25,14 @@ const MatchBet = () => {
     }
   }
 
-  fetch(`https://api.cricapi.com/v1/match_info?apikey=e7ebe5f5-b5c9-4f87-8a1f-925d47378409&id=8aac46d6-fdd5-453b-afbf-01b12fda1fc9`)
-        .then(response => 
-           response.json()
-        )
-        .then(data =>{
-          console.log(data);
-           setMatchData(data);
-        });
+  // fetch(`https://api.cricapi.com/v1/match_info?apikey=e7ebe5f5-b5c9-4f87-8a1f-925d47378409&id=8aac46d6-fdd5-453b-afbf-01b12fda1fc9`)
+  //       .then(response => 
+  //          response.json()
+  //       )
+  //       .then(data =>{
+  //         console.log(data);
+  //          setMatchData(data);
+  //       });
   
   
     // console.log(matchData);
@@ -59,7 +59,7 @@ const MatchBet = () => {
   return (
     <div className="flex bg-black">
       <div className="w-[50%]">
-        <MatchCard matchData={matchData} />
+        <MatchCard />
       </div>
       <div className="w-[50%] bg-black">
         <div className="flex w-full bg-gray-900">
