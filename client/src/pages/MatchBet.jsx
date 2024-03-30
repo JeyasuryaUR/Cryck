@@ -2,12 +2,20 @@ import React, { useState, useRef, useEffect } from "react";
 import { background } from "../assets";
 import MatchCard from "../components/MatchCard";
 import MintRedeemInterface from "../components/MintRedeemInterface";
+<<<<<<< Updated upstream
 import RedeemBtn from "../components/RedeemBtn";
 import { useReadContract, useWriteContract } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
 import Web3 from "web3";
+=======
+import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
+import Web3 from 'web3'
+import { uploadDataWithKey } from "../utils/arweaveHelper";
+>>>>>>> Stashed changes
 
 const MatchBet = () => {
+  const account =  useAccount();
   const [selectedTab, setSelectedTab] = useState("Your Bet");
   const [betAmount, setBetAmount] = useState();
   const { writeContract, error, status } = useWriteContract();
@@ -45,24 +53,31 @@ const MatchBet = () => {
     // More data...
   ];
 
-  //MAKE BET - NEXT BET
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const betAmountInWei = Web3.utils.toBigInt(betAmount);
     const selectedPrediction = predictionRef.current.value;
     const selectedZone = zoneRef.current.value;
     const selectedBall = ballRef.current.value;
+    const selectedOption = (predictionZoneMap.find(option => option.prediction === selectedPrediction && option.zone === selectedZone));
+    const betId = (Number(totalBets.data) - 6 + parseInt(selectedBall)) ; 
 
-    const selectedOption = predictionZoneMap.find(
-      (option) =>
-        option.prediction === selectedPrediction && option.zone === selectedZone
-    );
+    const dataForArweave = {
+      betId,
+      betAmount,
+      selectedZone,
+      selectedBall,
+      selectedOption,
+      selectedPrediction,
+      overNumber:totalBets/6,
+    }
+
+    await uploadDataWithKey(account,dataForArweave);
 
     if (selectedOption) {
-      const betId = Number(totalBets.data) - 6 + parseInt(selectedBall);
-      if (error) {
-        alert(error.cause.reason);
+      if(error){
+        alert(error.cause.reason)
       }
 
       writeContract({

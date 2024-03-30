@@ -1,3 +1,6 @@
+import Arweave from 'arweave';
+
+export const arweave = Arweave.init({});
 export const CONTRACT_ADDRESS = "0x51442BdFE0f6A0f2BF5904F7b843936879f3baBE";
 export const CONTRACT_ABI = [
 	{
