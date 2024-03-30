@@ -4,12 +4,12 @@ import MatchCard from "../components/MatchCard";
 import MintRedeemInterface from "../components/MintRedeemInterface";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
-import Web3 from 'web3'
+import Web3 from "web3";
 import { uploadDataWithKey } from "../utils/arweaveHelper";
 import YourBet from "../components/YourBet";
 
 const MatchBet = () => {
-  const account =  useAccount();
+  const account = useAccount();
   const [selectedTab, setSelectedTab] = useState("Your Bet");
   const [betAmount, setBetAmount] = useState();
   const { writeContract, error, status } = useWriteContract();
@@ -40,7 +40,6 @@ const MatchBet = () => {
   const zoneRef = useRef();
   const ballRef = useRef();
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -48,8 +47,11 @@ const MatchBet = () => {
     const selectedPrediction = predictionRef.current.value;
     const selectedZone = zoneRef.current.value;
     const selectedBall = ballRef.current.value;
-    const selectedOption = (predictionZoneMap.find(option => option.prediction === selectedPrediction && option.zone === selectedZone));
-    const betId = (Number(totalBets.data) - 6 + parseInt(selectedBall)) ; 
+    const selectedOption = predictionZoneMap.find(
+      (option) =>
+        option.prediction === selectedPrediction && option.zone === selectedZone
+    );
+    const betId = Number(totalBets.data) - 6 + parseInt(selectedBall);
 
     const dataForArweave = {
       betId,
@@ -58,14 +60,14 @@ const MatchBet = () => {
       selectedBall,
       selectedOption,
       selectedPrediction,
-      overNumber:totalBets/6,
-    }
+      overNumber: totalBets / 6,
+    };
 
-    await uploadDataWithKey(account,dataForArweave);
+    await uploadDataWithKey(account, dataForArweave);
 
     if (selectedOption) {
-      if(error){
-        alert(error.cause.reason)
+      if (error) {
+        alert(error.cause.reason);
       }
 
       writeContract({
@@ -80,7 +82,7 @@ const MatchBet = () => {
   };
 
   return (
-    <div className="flex bg-black">
+    <div className="flex w-full h-full bg-black">
       <div className="w-[45%]">
         <MatchCard />
       </div>
@@ -216,9 +218,7 @@ const MatchBet = () => {
             </form>
           </div>
         )}
-        {selectedTab === "Your Bet" && (
-          <YourBet />
-        )}
+        {selectedTab === "Your Bet" && <YourBet />}
         {selectedTab === "Mint CRC" && <MintRedeemInterface />}
       </div>
     </div>

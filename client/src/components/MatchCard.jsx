@@ -77,7 +77,7 @@ const MatchCard = () => {
           Commentary
         </div>
         <div className="justify-center py-1.5 mt-6 text-lg bg-black">
-          {/* {commentary} */}Yoo
+          {commentary}
         </div>
       </div>
     </div>
