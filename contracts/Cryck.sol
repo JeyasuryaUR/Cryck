@@ -10,9 +10,10 @@ contract Cryck is ERC20{
         bool isWon;
         uint256 betId;
         uint256 reward; // replace to make it generic
-        uint256 betZone;
         uint256 betAmount;
         uint256 betOption;
+        uint256 betZone;
+        uint256 betOver;
         uint256 betBallNumber;
         uint256 betPrediction;
     }
@@ -23,13 +24,12 @@ contract Cryck is ERC20{
     mapping(uint256 => address[]) public betIdToAddress;
     mapping(uint256 => uint256) public betIdToBetPool;
     mapping(uint256 => uint256) public betIdToAnswers;
+    mapping(uint256 => uint256) public betIdToRewards;
 
     uint256 public totalBets;
     uint256 public constant TOTAL_OPTIONS = 43;
 
     constructor() ERC20("Cryck","CRC"){
-        // can bet for first 6 balls
-        totalBets=6;
     }
 
     function mintCoins(uint256 CRCAmount) external payable{
@@ -51,7 +51,7 @@ contract Cryck is ERC20{
         payable(msg.sender).transfer(ethAmount);
     }
 
-    function bet(uint256 _betAmount,uint256 _betId,uint256 _betOption,uint256 _betZone,uint256 _betBallNumber,uint256 _betPrediction) external {
+    function bet(uint256 _betAmount,uint256 _betId,uint256 _betOption,uint256 _betZone,uint256 _betOver,uint256 _betBallNumber,uint256 _betPrediction) external {
         require(betIdToAnswers[_betId]==0,"Bet is over");
         require(balanceOf(msg.sender) >= _betAmount, "Insufficient tokens for the bet");
 
@@ -60,16 +60,23 @@ contract Cryck is ERC20{
             betAmount: _betAmount,
             betOption : _betOption,
             betZone:_betZone,
+            betOver:_betOver,
             betBallNumber:_betBallNumber,
             betPrediction:_betPrediction,
             reward : 0,
             isWon: false
         });
 
+        if(betIdToAddress[_betId].length == 0){
+            totalBets++;
+        }
+
         Bet[] memory allUserBets = userBets[msg.sender];
-        Bet memory lastBet = allUserBets[allUserBets.length - 1];
-        if(lastBet.betId == _betId){
-            userBets[msg.sender].pop();
+        if(allUserBets.length > 0){
+            Bet memory lastBet = allUserBets[allUserBets.length - 1];
+            if(lastBet.betId == _betId){
+                userBets[msg.sender].pop();
+            }
         }
 
         userBets[msg.sender].push(newBet);
@@ -80,13 +87,10 @@ contract Cryck is ERC20{
     }
 
     function uploadAnswerForBet(uint256 _betId,uint256 _optionId) external{
-        require(_betId < totalBets,"Incorrect betId");
         require(_optionId >0 && _optionId < TOTAL_OPTIONS, "Incorrect optionId");
         require(betIdToAnswers[_betId]==0,"Bet settled");
-        
-        if(_betId == totalBets-1){
-            totalBets+=6;
-        }
+        require(betIdToAddress[_betId].length > 0, "No bets placed by anyone");
+
         betIdToAnswers[_betId] = _optionId;
         _calculateRewards(_betId);
     }
@@ -99,18 +103,36 @@ contract Cryck is ERC20{
         return betIdToAnswers[_betId] > 0;
     }
 
-    function resolveBet(uint256 _betId) external returns (bool) {
-        require(userBets[msg.sender][_betId].betAmount > 0, "No bet placed");
-        require(!userBets[msg.sender][_betId].isWon, "Already won");
-        require(betIdToAnswers[_betId] > 0, "Bet Not resolved");
-        
-        if(userBets[msg.sender][_betId].reward == 0){
-            return false;
-        }
-        userBets[msg.sender][_betId].isWon = true;
+    function resolveBet(uint256 _betId) external {
+        require(betIdToAnswers[_betId] > 0, "Bet not resolved");
 
-        _transfer(address(this), msg.sender, userBets[msg.sender][_betId].reward+userBets[msg.sender][_betId].betAmount);
-        return true;
+        bool betFound = false;
+        uint256 betIndex;
+
+        // Start from the end of the userBets array for the caller
+        for (int256 i = int256(userBets[msg.sender].length) - 1; i >= 0; i--) {
+            if (userBets[msg.sender][uint256(i)].betId == _betId) {
+                betFound = true;
+                betIndex = uint256(i);
+                break; // Break once the relevant bet is found
+            }
+        }
+
+        // Ensure a bet was found
+        require(betFound, "No bet placed");
+        
+        // Access the bet directly now that we have the index
+        Bet storage bet = userBets[msg.sender][betIndex];
+        
+        // Perform the checks on the found bet
+        require(bet.betAmount > 0, "No bet placed");
+        require(bet.isWon, "You lost bet");
+
+        // Mark the bet as won
+        bet.isWon = false;
+
+        // Transfer the winnings + original bet amount back to the user
+        _transfer(address(this), msg.sender, betIdToRewards[_betId] + bet.betAmount);
     }
 
     function _calculateRewards(uint256 _betId) internal {
@@ -121,9 +143,9 @@ contract Cryck is ERC20{
         // Iterate over each address that participated in the bet
         for (uint256 i = 0; i < betIdToAddress[_betId].length; i++) {
             address bettor = betIdToAddress[_betId][i];
-            // Iterate over each bet made by the address for the specific betId
-            for (uint256 j = 0; j < userBets[bettor].length; j++) {
-                Bet storage bet = userBets[bettor][j];
+            // Start from the end of the userBets array for the bettor
+            for (int256 j = int256(userBets[bettor].length) - 1; j >= 0; j--) {
+                Bet storage bet = userBets[bettor][uint256(j)]; // Convert j back to unsigned int
                 if (bet.betId == _betId) {
                     if (bet.betOption != correctOptionId) {
                         totalLoserBetAmount += bet.betAmount;
@@ -132,6 +154,7 @@ contract Cryck is ERC20{
                         bet.isWon = true; // Mark as won
                         totalWinners++;
                     }
+                    break; // Break the loop once the relevant bet is found
                 }
             }
         }
@@ -141,18 +164,6 @@ contract Cryck is ERC20{
 
         // Calculate the reward to be added to each winner's reward based on losers' total bet amount
         uint256 rewardPerWinner = totalLoserBetAmount / totalWinners;
-
-        // Distribute the loser's pool to the winners
-        for (uint256 i = 0; i < betIdToAddress[_betId].length; i++) {
-            address bettor = betIdToAddress[_betId][i];
-            // Iterate over each bet made by the address for the specific betId
-            for (uint256 j = 0; j < userBets[bettor].length; j++) {
-                Bet storage bet = userBets[bettor][j];
-                if (bet.betId == _betId && bet.betOption == correctOptionId) {
-                    bet.reward += rewardPerWinner; // Add the calculated reward
-                }
-            }
-        }
+        betIdToRewards[_betId] = rewardPerWinner;
     }
-
 }

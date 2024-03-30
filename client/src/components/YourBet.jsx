@@ -13,8 +13,6 @@ const YourBet = () => {
         args: [account.address],
     });
 
-    console.log(data); // TODO: convert 10 to wicket
-
     return (
         <div className="h-[500px]">
             <table className="min-w-full table-auto bg-black text-white">
@@ -31,13 +29,13 @@ const YourBet = () => {
                 <tbody className="bg-gray-700">
                     {data && data.map((bet, index) => (
                         <tr key={index} className="bg-gray-800 border-b border-gray-600">
-                            <td className="px-6 py-2">{parseInt((Number(bet.betId)/6))}</td>
+                            <td className="px-6 py-2">{Number(bet.betOver)}</td>
                             <td className="px-6 py-2">{Number(bet.betBallNumber)}</td>
                             <td className="px-6 py-2">{Number(bet.betPrediction) == 10 ? 'W' : Number(bet.betPrediction)}</td>
                             <td className="px-6 py-2">{Number(bet.betZone)}</td>
                             <td className="px-6 py-2">{Number(bet.betAmount)}</td>
                             <td className="px-6 py-2">
-                              <RedeemBtn betId={0} />
+                              <RedeemBtn betId={bet.betId} />
                             </td>
                         </tr>
                     ))}

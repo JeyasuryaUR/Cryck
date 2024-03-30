@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0xd4b1bbEb4C9a8d0beb551BEa2ddE7c9103A1D8A0";
+export const CONTRACT_ADDRESS = "0x756E380971aFAbD791Ff68b5D99Cbac265e09DF3";
 export const CONTRACT_ABI = [
 	{
 		"inputs": [],
@@ -74,6 +74,11 @@ export const CONTRACT_ABI = [
 			{
 				"internalType": "uint256",
 				"name": "_betZone",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_betOver",
 				"type": "uint256"
 			},
 			{
@@ -175,13 +180,7 @@ export const CONTRACT_ABI = [
 			}
 		],
 		"name": "resolveBet",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
@@ -390,6 +389,25 @@ export const CONTRACT_ABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "betIdToRewards",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
 				"name": "_betId",
 				"type": "uint256"
 			}
@@ -447,17 +465,22 @@ export const CONTRACT_ABI = [
 					},
 					{
 						"internalType": "uint256",
-						"name": "betZone",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
 						"name": "betAmount",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
 						"name": "betOption",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "betZone",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "betOver",
 						"type": "uint256"
 					},
 					{
@@ -576,17 +599,22 @@ export const CONTRACT_ABI = [
 			},
 			{
 				"internalType": "uint256",
-				"name": "betZone",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
 				"name": "betAmount",
 				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
 				"name": "betOption",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "betZone",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "betOver",
 				"type": "uint256"
 			},
 			{
@@ -603,4 +631,4 @@ export const CONTRACT_ABI = [
 		"stateMutability": "view",
 		"type": "function"
 	}
-]
+];

@@ -50,7 +50,6 @@ const MatchBet = () => {
 
   const predictionRef = useRef();
   const zoneRef = useRef();
-  const ballRef = useRef();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -58,12 +57,12 @@ const MatchBet = () => {
     const betAmountInWei = Web3.utils.toBigInt(betAmount);
     const selectedPrediction = predictionRef.current.value === 'W' ? 10 : parseInt(predictionRef.current.value) ;
     const selectedZone = parseInt(zoneRef.current.value);
-    const selectedBall = parseInt(ballRef.current.value);
+    const selectedBall = parseInt(ballRef.current.value); // get from server
     const selectedOption = predictionZoneMap.find(
       (option) =>
         option.prediction === selectedPrediction && option.zone === selectedZone
     );
-    const betId = Number(totalBets.data) - 6 + selectedBall;
+    const betId = Number(totalBets.data) - 6 + selectedBall; // get from server
 
     if (selectedOption) {
       if (error) {
@@ -89,30 +88,35 @@ const MatchBet = () => {
       <div className="w-[55%] bg-black pr-3">
         <div className="flex w-full bg-gray-900 mb-5 rounded-md">
           <TabButton
+            title="Swap Coins"
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+            tabName="Mint CRC"
+          />
+
+          <TabButton
             title="Place a Bet"
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
             tabName="Next Bet"
           />
+          
           <TabButton
             title="My Bets"
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
             tabName="Your Bet"
           />
-          <TabButton
-            title="Swap Coins"
-            selectedTab={selectedTab}
-            setSelectedTab={setSelectedTab}
-            tabName="Mint CRC"
-          />
+          
         </div>
+        {selectedTab === "Mint CRC" && <MintRedeemInterface />}
+
         {selectedTab === "Next Bet" && (
           <div className="h-full bg-black text-white p-5 rounded-md">
             <img src={"./zones.png"} alt="Zones" className="mx-auto h-80 mb-5" />
             <form className="space-y-4 bg-gray-800 p-6 rounded-lg" onSubmit={handleSubmit}>
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
+                <div className="grid grid-cols-2 gap-4">
+                  {/* <div>
                     <label htmlFor="ballNumber" className="block text-sm font-medium text-white">
                       Ball Number
                     </label>
@@ -125,7 +129,7 @@ const MatchBet = () => {
                     <option value="4">Ball 5</option>
                     <option value="5">Ball 6</option>
                     </select>
-                  </div>
+                  </div> */}
 
                   <div>
                     <label htmlFor="prediction" className="block text-sm font-medium text-white">
@@ -179,7 +183,6 @@ const MatchBet = () => {
           </div>
         )}
         {selectedTab === "Your Bet" && <YourBet />}
-        {selectedTab === "Mint CRC" && <MintRedeemInterface />}
       </div>
     </div>
   );
