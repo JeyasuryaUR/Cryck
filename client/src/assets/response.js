@@ -1,4 +1,4 @@
-export const response = [
+const response = [
   {
     betId: 0,
     match: "MI vs CSK",
@@ -65,3 +65,5 @@ export const response = [
       "A powerful shot by Ishan Kishan! The batsman smashes the ball over mid-wicket, picking up two runs with aggressive running between the wickets. The fielders are left stunned as the batsmen complete the runs comfortably. The crowd roars in appreciation as two more runs are added to the total.",
   },
 ];
+
+export default response;

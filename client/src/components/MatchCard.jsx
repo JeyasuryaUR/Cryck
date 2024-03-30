@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import response from "../assets/response";
 
 const MatchCard = () => {
+  const [commentary, setCommentary] = useState(response[0].commentary);
+  const [score, setScore] = useState(response[0].score);
+
+  useEffect(() => {
+    let i = 0;
+    const interval = setInterval(() => {
+      i++;
+      setCommentary(response[i].commentary);
+      setScore(response[i].score);
+    }, 20000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="shrink-0 self-stretch m-auto border-blue-900 border-solid border-[5px] h-[594px] rounded-[39px] w-[396px] max-md:mt-10">
+    <div className="shrink-0 self-stretch m-auto border-blue-900 border-solid border-[5px] rounded-[39px] w-[396px] max-md:mt-10">
       <div className="flex relative gap-0.5 mt-10 ml-6 max-md:mt-10 max-md:ml-2.5">
         <div className="flex flex-col text-white">
           <div className="flex gap-2.5">
@@ -48,13 +62,8 @@ const MatchCard = () => {
         <div className="self-center text-3xl border-0 border-white border-solid tracking-[2.26px]">
           Commentary
         </div>
-        <div className="justify-center py-1.5 mt-6 text-lg bg-white">
-          Allrounder Hardik Pandya's calling cards brisk seam bowling and
-          powerful ball-striking marked by the ability to hit sixes from the
-          first ball.
-          <br />
-          Hardik, who plays his domestic cricket for Baroda, first caught the
-          eye with an unbeaten 31-ball 61 for Mumbai Indians{" "}
+        <div className="justify-center py-1.5 mt-6 text-lg bg-black">
+          {commentary}
         </div>
       </div>
     </div>
