@@ -54,7 +54,7 @@ const router = createBrowserRouter([
         element: <AllMatches />,
       },
     {
-        path: "/match/:id",
+        path: "/match",
         element: <MatchBet />,
     },
     ],
