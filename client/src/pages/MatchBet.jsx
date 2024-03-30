@@ -2,18 +2,17 @@ import React, { useState, useRef, useEffect } from "react";
 import { background } from "../assets";
 import MatchCard from "../components/MatchCard";
 import MintRedeemInterface from "../components/MintRedeemInterface";
-import RedeemBtn from "../components/RedeemBtn";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
 import Web3 from 'web3'
 import { uploadDataWithKey } from "../utils/arweaveHelper";
+import YourBet from "../components/YourBet";
 
 const MatchBet = () => {
   const account =  useAccount();
   const [selectedTab, setSelectedTab] = useState("Your Bet");
   const [betAmount, setBetAmount] = useState();
   const { writeContract, error, status } = useWriteContract();
-  const [bets, setBets] = useState([]);
 
   const totalBets = useReadContract({
     abi: CONTRACT_ABI,
@@ -41,11 +40,6 @@ const MatchBet = () => {
   const zoneRef = useRef();
   const ballRef = useRef();
 
-  const fetchedData = [
-    { over: 1, ball: 2, score: 3, zone: 'A', betAmount: 50 },
-    { over: 2, ball: 3, score: 4, zone: 'B', betAmount: 100 },
-    // More data...
-  ];
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -84,12 +78,6 @@ const MatchBet = () => {
       console.log("Yoo");
     }
   };
-
-  //YOUR BETS
-  useEffect(() => {
-    // Fetch the data here and update the state
-    setBets(fetchedData);
-  }, []);
 
   return (
     <div className="flex bg-black">
@@ -229,34 +217,7 @@ const MatchBet = () => {
           </div>
         )}
         {selectedTab === "Your Bet" && (
-          <div className="h-[500px]">
-            <table className="min-w-full table-auto bg-black text-white">
-                <thead className="justify-between">
-                    <tr>
-                        <th className="px-6 py-2">Over</th>
-                        <th className="px-6 py-2">Ball Number</th>
-                        <th className="px-6 py-2">Score</th>
-                        <th className="px-6 py-2">Zone</th>
-                        <th className="px-6 py-2">Bet Amount</th>
-                        <th className="px-6 py-2">Redeem</th>
-                    </tr>
-                </thead>
-                <tbody className="bg-gray-700">
-                    {bets.map((bet, index) => (
-                        <tr key={index} className="bg-gray-800 border-b border-gray-600">
-                            <td className="px-6 py-2">{bet.over}</td>
-                            <td className="px-6 py-2">{bet.ball}</td>
-                            <td className="px-6 py-2">{bet.score}</td>
-                            <td className="px-6 py-2">{bet.zone}</td>
-                            <td className="px-6 py-2">{bet.betAmount}</td>
-                            <td className="px-6 py-2">
-                              <RedeemBtn betId={"hbjfvj"} />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            </div>
+          <YourBet />
         )}
         {selectedTab === "Mint CRC" && <MintRedeemInterface />}
       </div>
