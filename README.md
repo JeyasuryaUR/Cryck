@@ -23,9 +23,48 @@ Cryck aims to provide cricket enthusiasts with an immersive and transparent plat
 
 ![Illustration of 14 Zones](insert_image_here)
 
+
 ## Getting Started
 
-To get started with Cryck, visit [website_link_here] and sign up for an account using Rainbow Connect. Once logged in, navigate to the prediction section to start playing.
+To get started with Cryck, follow these steps to run the local server:
+
+1. **Clone the Repository:** Clone the Cryck repository from GitHub to your local machine using the following command:
+
+   ```bash
+   git clone https://github.com/your-username/cryck.git
+   ```
+
+2. **Navigate to the Directory:** Move into the Cryck project directory:
+
+   ```bash
+   cd cryck
+   ```
+
+3. **Install Dependencies:** Install the necessary dependencies using npm or yarn:
+
+   ```bash
+   npm install
+   ```
+
+   or
+
+   ```bash
+   yarn install
+   ```
+
+4. **Start the Local Server:** Once the dependencies are installed, start the local server:
+
+   ```bash
+   npm start
+   ```
+
+   or
+
+   ```bash
+   yarn start
+   ```
+
+5. **Access Cryck:** Open your web browser and navigate to `http://localhost:3000` to access the Cryck platform. You can now sign up or log in with Rainbow Connect to start predicting cricket outcomes and earning CrypkCoins (CRC).
 
 ## Support
 
