@@ -1,3 +1,3 @@
-1. Landing to match page
-2. contract integration
-3. server connect
+2  your bet
+3. redeem bet 
+4. upload answer
