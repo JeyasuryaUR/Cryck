@@ -16,12 +16,16 @@ async function betIdToAddress(betId) {
   }
 }
 
+//TODO: configure sender address & private key
+const SENDER_ADDRESS = "YOUR SENDER ADDRESS"
+const PRIVATE_KEY = "YOUR PRIVATE KEY"
+
 async function uploadAnswerForBet(betId, optionId) {
-  const nonce = await web3.eth.getTransactionCount('0x257c7d5EF6F1C5601Ad38E48A05976CB933aa4C1', 'latest'); // get the latest nonce
+  const nonce = await web3.eth.getTransactionCount(SENDER_ADDRESS, 'latest'); // get the latest nonce
   const encodedABI = myContract.methods.uploadAnswerForBet(betId, optionId).encodeABI();
   const gasPrice = await web3.eth.getGasPrice();
   const tx = {
-        from: '0x257c7d5EF6F1C5601Ad38E48A05976CB933aa4C1',
+        from: SENDER_ADDRESS,
         to: CONTRACT_ADDRESS,
         gas: 2000000,
         gasPrice,
@@ -30,7 +34,7 @@ async function uploadAnswerForBet(betId, optionId) {
     };
 
     // Sign the transaction
-    const signedTx = await web3.eth.accounts.signTransaction(tx, '1ec52388c0bb45afc6a20f6a66b4f03d27216e1e048f62d7f6f7d5d22eb3074f');
+    const signedTx = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY);
 
     // Send the signed transaction
     const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
