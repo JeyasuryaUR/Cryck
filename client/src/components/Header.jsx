@@ -1,12 +1,12 @@
 import React from "react";
-import { logo } from "../assets";
+import { cryckLogo } from "../assets";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const Header = () => {
   return (
     <nav className="sticky bg-black w-full top-0 z-50 flex">
-      <div className="mx-4 text-white font-bold">
-        <img src={logo} alt="logo" width={95} />
+      <div className="m-4 text-white font-bold">
+        <img src={cryckLogo} alt="logo" width={95} />
       </div>
       <div className="ml-auto m-4 flex items-center">
         <ConnectButton />
