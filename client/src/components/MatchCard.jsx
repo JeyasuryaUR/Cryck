@@ -1,22 +1,10 @@
-import React, { useEffect, useState } from "react";
-import response from "../assets/response";
+import React from "react";
+import { response } from "../data";
 
 const MatchCard = () => {
-  const [commentary, setCommentary] = useState(response[0].commentary);
-  const [score, setScore] = useState(response[0].score);
-
-  useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      i++;
-      setCommentary(response[i].commentary);
-      setScore(response[i].score);
-    }, 20000);
-    return () => clearInterval(interval);
-  }, []);
-
+  console.log(response);
   return (
-    <div className="shrink-0 self-stretch m-auto border-blue-900 border-solid border-[5px] rounded-[39px] w-[396px] max-md:mt-10">
+    <div className="shrink-0 self-stretch m-auto border-blue-900 border-solid border-[5px] h-[594px] rounded-[39px] w-[396px] max-md:mt-10">
       <div className="flex relative gap-0.5 mt-10 ml-6 max-md:mt-10 max-md:ml-2.5">
         <div className="flex flex-col text-white">
           <div className="flex gap-2.5">
