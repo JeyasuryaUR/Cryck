@@ -1,69 +1,77 @@
-const response = [
-  {
-    betId: 0,
-    match: "MI vs CSK",
-    score: "151/2",
-    target: "201/8",
-    over: 4,
-    ball: 0,
-    correctOptionId: 10,
-    zone: "1",
-    prediction: "4",
-    commentary:
-      "A powerful shot by Rohit Sharma! The batsman elegantly guides the ball towards the third man boundary, sending it racing away for a boundary. The fielders scramble, but the ball beats them comfortably. The crowd erupts in cheers as the scoreboard ticks over with four precious runs added to the total. A classic display of skill and timing by Rohit Sharma, showcasing his prowess in finding the gaps and exploiting the field placement.",
-  },
-  {
-    betId: 1,
-    match: "MI vs CSK",
-    score: "155/2",
-    target: "201/8",
-    over: 4,
-    ball: 1,
-    correctOptionId: 0,
-    zone: "4",
-    prediction: "W",
-    commentary:
-      "A quick single taken by Rohit Sharma! The batsman nudges the ball into the gap at cover and scampers through for a swift run. The fielders react, but the batsmen complete the run comfortably. The crowd acknowledges the smart running between the wickets as two runs are added to the total. Rohit Sharma's strategic play showcases his ability to rotate the strike effectively.",
-  },
-  {
-    betId: 2,
-    match: "MI vs CSK",
-    score: "152/2",
-    target: "201/8",
-    over: 4,
-    ball: 2,
-    correctOptionId: 0,
-    zone: "2",
-    prediction: "4",
-    commentary:
-      "A well-placed shot by Suryakumar Yadav! The batsman drives the ball through the covers, picking up a quick single. The fielders are quick to react, but the batsmen complete the run comfortably. The crowd appreciates the elegant stroke play as one run is added to the total.",
-  },
-  {
-    betId: 3,
-    match: "MI vs CSK",
-    score: "154/2",
-    target: "201/8",
-    over: 4,
-    ball: 3,
-    correctOptionId: 0,
-    zone: "5",
-    prediction: "4",
-    commentary:
-      "A brilliant piece of running between the wickets by Ishan Kishan! The batsmen push for a quick couple as they exploit the gap in the field. The fielders give chase, but the batsmen complete the second run comfortably. The crowd cheers as two runs are added to the total.",
-  },
-  {
-    betId: 4,
-    match: "MI vs CSK",
-    score: "156/2",
-    target: "201/8",
-    over: 4,
-    ball: 4,
-    correctOptionId: 0,
-    zone: "9",
-    prediction: "6",
-    commentary:
-      "A powerful shot by Ishan Kishan! The batsman smashes the ball over mid-wicket, picking up two runs with aggressive running between the wickets. The fielders are left stunned as the batsmen complete the runs comfortably. The crowd roars in appreciation as two more runs are added to the total.",
-  },
-];
+const faker = require('faker');
 
-export default response;
+let betId = 0;
+let over = 1;
+let ball = 1;
+let score = 0;
+let wickets = 0;
+
+const matches = ["MI vs CSK", "RCB vs KKR", "SRH vs DC"];
+const zones = Array.from({length: 14}, (_, i) => (i + 1).toString());
+const predictions = ["4", "6", "W"];
+const correctOptions = Array.from({length: 43}, (_, i) => i);
+
+let genResponse = [];
+
+function generateCommentary(match, over, ball, score, prediction, zone) {
+  const batsman = faker.name.findName();
+  const bowler = faker.name.findName();
+  const phrases = [
+    `${batsman} faces ${bowler} in over ${over}.${ball} of the ${match} match.`,
+    `The ball goes to zone ${zone}.`,
+    `The score is now ${score}.`,
+  ];
+  switch (prediction) {
+    case '4':
+      phrases.push(`${batsman} hits a boundary!`);
+      break;
+    case '6':
+      phrases.push(`What a shot! ${batsman} hits a six!`);
+      break;
+    case 'W':
+      phrases.push(`Oh no! ${batsman} gets out!`);
+      break;
+  }
+  return phrases.join(' ');
+}
+
+function generateData() {
+  const match = matches[Math.floor(Math.random() * matches.length)];
+  const runs = Math.floor(Math.random() * 7);
+  score += runs;
+  if (runs === 0) wickets++;
+  const target = `${Math.floor(Math.random() * 250) + score}/${Math.floor(Math.random() * 10) + wickets}`;
+  ball++;
+  if (ball > 6) {
+    over++;
+    ball = 1;
+  }
+  const correctOptionId = correctOptions[Math.floor(Math.random() * correctOptions.length)];
+  const zone = zones[Math.floor(Math.random() * zones.length)];
+  const prediction = predictions[Math.floor(Math.random() * predictions.length)];
+  const commentary = generateCommentary(match, over, ball, `${score}/${wickets}`, prediction, zone);
+
+  const data = {
+    betId: betId++,
+    match,
+    score: `${score}/${wickets}`,
+    target,
+    over: `${over}.${ball}`,
+    ball,
+    correctOptionId,
+    zone,
+    prediction,
+    commentary,
+  };
+
+  genResponse.push(data);
+}
+
+generateData();
+
+setInterval(() => {
+  generateData();
+  console.log(genResponse);
+}, 30000); // 30 seconds milliseconds
+
+export const response = genResponse;

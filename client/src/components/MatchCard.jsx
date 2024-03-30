@@ -3,6 +3,7 @@ import { response } from "../data";
 import { callUploadAnswerForBet } from "../utils/sendTx";
 
 const MatchCard = () => {
+  console.log(response);
   const [commentary, setCommentary] = useState(response[0].commentary);
   const [score, setScore] = useState(response[0].score);
   const [ballsLeft, setBallsLeft] = useState(62);
@@ -50,7 +51,7 @@ const MatchCard = () => {
               <div className="mt-7 text-sm font-light">
                 Need{" "}
                 {Number(response[0].team1.split("/")[0]) -
-                  Number(score.split("/")[0])}{" "}
+                  Number(score.split('/')[0])}{" "}
                 runs in {ballsLeft} balls
               </div>
               <div className="m-3 text-xs">
