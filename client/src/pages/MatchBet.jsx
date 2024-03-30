@@ -8,9 +8,24 @@ import Web3 from "web3";
 import { uploadDataWithKey } from "../utils/arweaveHelper";
 import YourBet from "../components/YourBet";
 
+const TabButton = ({ title, selectedTab, setSelectedTab, tabName }) => (
+  <div
+      className="w-[33%] rounded-md p-1 cursor-pointer"
+      onClick={() => setSelectedTab(tabName)}
+  >
+      <p
+          className={`text-center text-white ${
+              selectedTab === tabName ? "bg-gray-700" : ""
+          }`}
+      >
+          {title}
+      </p>
+  </div>
+);
+
 const MatchBet = () => {
   const account = useAccount();
-  const [selectedTab, setSelectedTab] = useState("Your Bet");
+  const [selectedTab, setSelectedTab] = useState("Next Bet");
   const [betAmount, setBetAmount] = useState();
   const { writeContract, error, status } = useWriteContract();
 
@@ -77,57 +92,40 @@ const MatchBet = () => {
         args: [betAmountInWei, betId, selectedOption.optId],
       });
     } else {
-      console.log("Yoo");
+      alert("Options not selected");
     }
   };
 
   return (
-    <div className="flex w-full h-full bg-black">
+    <div className="flex w-full overflow-hidden pb-6 h-full bg-black">
       <div className="w-[45%]">
         <MatchCard />
       </div>
       <div className="w-[55%] bg-black pr-3">
         <div className="flex w-full bg-gray-900 mb-5 rounded-md">
-          <div
-            className="w-[33%] rounded-md p-1"
-            onClick={() => setSelectedTab("Next Bet")}
-          >
-            <p
-              className={`text-center text-white ${
-                selectedTab === "Next Bet" ? "bg-gray-700" : ""
-              }`}
-            >
-              Next Bet
-            </p>
-          </div>
-          <div
-            className="w-[33%] rounded-md p-1"
-            onClick={() => setSelectedTab("Your Bet")}
-          >
-            <p
-              className={`text-center text-white ${
-                selectedTab === "Your Bet" ? "bg-gray-700" : ""
-              }`}
-            >
-              Your Bet
-            </p>
-          </div>
-          <div
-            className="w-[33%] rounded-md p-1"
-            onClick={() => setSelectedTab("Mint CRC")}
-          >
-            <p
-              className={`text-center text-white ${
-                selectedTab === "Mint CRC" ? "bg-gray-700" : ""
-              }`}
-            >
-              Mint Coins
-            </p>
-          </div>
+          <TabButton
+            title="Place a Bet"
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+            tabName="Next Bet"
+          />
+          <TabButton
+            title="My Bets"
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+            tabName="Your Bet"
+          />
+          <TabButton
+            title="Swap Coins"
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+            tabName="Mint CRC"
+          />
         </div>
         {selectedTab === "Next Bet" && (
-          <div className="h-full bg-black text-white">
-            <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="h-full bg-black text-white p-5 rounded-md">
+            <img src={"./zones.png"} alt="Zones" className="mx-auto h-80 mb-5" />
+              <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label
                   htmlFor="ballNumber"
