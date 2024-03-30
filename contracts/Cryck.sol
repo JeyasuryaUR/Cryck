@@ -39,7 +39,7 @@ contract Cryck is ERC20,Ownable {
 
     function convertCRCToEth(uint256 ethAmount) external {
         require(ethAmount > 0, "ETH amount must be greater than 0");
-        uint256 requiredCRCTokens = ethAmount * TOKENS_PER_ETH;
+        uint256 requiredCRCTokens = (ethAmount * TOKENS_PER_ETH)/ 1 ether;
         
         require(balanceOf(msg.sender) >= requiredCRCTokens, "Insufficient CRC token balance");
         require(address(this).balance >= ethAmount, "Contract does not have enough ETH");
@@ -49,7 +49,7 @@ contract Cryck is ERC20,Ownable {
     }
 
     function bet(uint256 _betAmount,uint256 _betId,uint256 _betOption) external {
-        require(betIdToAnswers[_betId]>0,"Bet is over");
+        require(betIdToAnswers[_betId]==0,"Bet is over");
         require(balanceOf(msg.sender) >= _betAmount, "Insufficient tokens for the bet");
 
         Bet memory newBet = Bet({
@@ -91,7 +91,7 @@ contract Cryck is ERC20,Ownable {
         }
         userBets[msg.sender].isWon = true;
 
-        _transfer(address(this), msg.sender, userBets[msg.sender].reward);
+        _transfer(address(this), msg.sender, userBets[msg.sender].reward+userBets[msg.sender].betAmount);
         return true;
     }
 
