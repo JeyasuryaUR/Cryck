@@ -4,8 +4,6 @@ import MintRedeemInterface from "../components/MintRedeemInterface";
 import { useParams } from "react-router-dom";
 
 const MatchBet = () => {
-  // const { id } = useParams();
-  // console.log(id);
   // const [matchData, setMatchData] = useState({})
   const [selectedTab, setSelectedTab] = useState("Your Bet");
 
@@ -24,18 +22,6 @@ const MatchBet = () => {
       });
     }
   }
-
-  // fetch(`https://api.cricapi.com/v1/match_info?apikey=e7ebe5f5-b5c9-4f87-8a1f-925d47378409&id=8aac46d6-fdd5-453b-afbf-01b12fda1fc9`)
-  //       .then(response => 
-  //          response.json()
-  //       )
-  //       .then(data =>{
-  //         console.log(data);
-  //          setMatchData(data);
-  //       });
-  
-  
-    // console.log(matchData);
 
   const predictionRef = useRef();
   const zoneRef = useRef();
@@ -58,21 +44,22 @@ const MatchBet = () => {
 
   return (
     <div className="flex bg-black">
-      <div className="w-[50%]">
+      <div className="w-[45%]">
         <MatchCard />
       </div>
-      <div className="w-[50%] bg-black">
-        <div className="flex w-full bg-gray-900">
-          <div className="w-[33%]" onClick={() => setSelectedTab("Next Bet")}>
+      <div className="w-[55%] bg-black pr-3">
+        <div className="flex w-full bg-gray-900 mb-5 rounded-md">
+          <div className="w-[33%] rounded-md p-1" onClick={() => setSelectedTab("Next Bet")}>
             <p className={`text-center text-white ${selectedTab === "Next Bet" ? "bg-gray-700" : ""}`}>Next Bet</p>
           </div>
-          <div className="w-[33%]" onClick={() => setSelectedTab("Your Bet")}>
+          <div className="w-[33%] rounded-md p-1" onClick={() => setSelectedTab("Your Bet")}>
             <p className={`text-center text-white ${selectedTab === "Your Bet" ? "bg-gray-700" : ""}`}>Your Bet</p>
           </div>
-          <div className="w-[33%]" onClick={() => setSelectedTab("Mint CRC")}>
+          <div className="w-[33%] rounded-md p-1" onClick={() => setSelectedTab("Mint CRC")}>
             <p className={`text-center text-white ${selectedTab === "Mint CRC" ? "bg-gray-700" : ""}`}>Mint Coins</p>
           </div>
         </div>
+          <img src="/zones.png" width={600} className="mx-auto my-1" alt="Field Image for reference" />
         {selectedTab === "Next Bet" && (
           <div className="h-[500px] bg-black text-white">
             <form className="space-y-4" onSubmit={handleSubmit}>
@@ -122,6 +109,15 @@ const MatchBet = () => {
                   <option value="3">Zone 3</option>
                   <option value="4">Zone 4</option>
                   <option value="5">Zone 5</option>
+                  <option value="6">Zone 6</option>
+                  <option value="7">Zone 7</option>
+                  <option value="8">Zone 8</option>
+                  <option value="9">Zone 9</option>
+                  <option value="10">Zone 10</option>
+                  <option value="11">Zone 11</option>
+                  <option value="12">Zone 12</option>
+                  <option value="13">Zone 13</option>
+                  <option value="14">Zone 14</option>
                 </select>
               </div>
 
