@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0x756E380971aFAbD791Ff68b5D99Cbac265e09DF3";
+export const CONTRACT_ADDRESS = "0xe3f698DB736F59A1Dc3fc3fB4Ea13835468689f5";
 export const CONTRACT_ABI = [
 	{
 		"inputs": [],
@@ -424,6 +424,25 @@ export const CONTRACT_ABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_betId",
+				"type": "uint256"
+			}
+		],
+		"name": "checkBetsForBet",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "decimals",
 		"outputs": [
@@ -631,4 +650,4 @@ export const CONTRACT_ABI = [
 		"stateMutability": "view",
 		"type": "function"
 	}
-];
+]

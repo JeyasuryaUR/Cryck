@@ -3,27 +3,28 @@ import { response } from "../data";
 
 
 const MatchCard = () => {
-  console.log(response);
-  const [commentary, setCommentary] = useState(response[0].commentary);
-  const [score, setScore] = useState(response[0].score);
+  const [score, setScore] = useState("0/0");
   const [ballsLeft, setBallsLeft] = useState(62);
 
   useEffect(() => {
     let i = 0;
     const interval = setInterval(() => {
-      i = i + 1;
-      setCommentary(response[i].commentary);
-      setScore(response[i].score);
-      setBallsLeft(ballsLeft - 1);
-      const betId = response[i].betId;
-      const optionId = response[i].correctOptionId;
-      
-      if (i === response.length - 1) {
+      if (i >= response.length) {
         clearInterval(interval);
+        return;
       }
-    }, 25000);
+
+      // Update state only if response[i] is defined
+      if (response[i]) {
+        setScore(response[i].score);
+        setBallsLeft(ballsLeft - 1);
+      }
+
+      i += 1;
+    }, 60000);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [ballsLeft]);
 
   return (
     <div className=" m-auto border-blue-900 border-solid border-[5px] rounded-[39px] w-[420px] max-md:mt-10">
@@ -49,12 +50,11 @@ const MatchCard = () => {
               </div>
               <div className="mt-7 text-sm font-light">
                 Need{" "}
-                {Number(response[0].team1.split("/")[0]) -
-                  Number(score.split('/')[0])}{" "}
+                {response[0].team1 && score && Number(response[0].team1.split("/")[0]) - Number(score.split('/')[0])}{" "}
                 runs in {ballsLeft} balls
               </div>
               <div className="m-3 text-xs">
-                Target : {Number(response[0].team1.split("/")[0]) + 1}
+              Target : {response[0].team1 ? Number(response[0].team1.split("/")[0]) + 1 : ''}
               </div>
             </div>
           </div>
@@ -82,7 +82,7 @@ const MatchCard = () => {
           Commentary
         </div>
         <div className="justify-center py-1.5 mt-6 text-md bg-black">
-          {commentary}
+          In an electrifying IPL clash, Bumrah's fiery delivery outfoxed Dhoni, taking a slight edge. SKY, at slip, leapt with grace, snagging the ball magnificently. The stadium erupted as this iconic MI vs CSK moment unfolded, showcasing skill and intense rivalry in a heartbeat.
         </div>
       </div>
     </div>

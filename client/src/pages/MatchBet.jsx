@@ -1,10 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import MatchCard from "../components/MatchCard";
 import MintRedeemInterface from "../components/MintRedeemInterface";
 import { useReadContract, useWriteContract } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
 import Web3 from "web3";
 import YourBet from "../components/YourBet";
+import { dataEventEmitter, getGeneratedBetId } from "../data";
 
 const TabButton = ({ title, selectedTab, setSelectedTab, tabName }) => (
   <div
@@ -22,6 +23,11 @@ const TabButton = ({ title, selectedTab, setSelectedTab, tabName }) => (
 );
 
 const MatchBet = () => {
+  const [currentValues, setCurrentValues] = useState({
+    currentBetId: getGeneratedBetId(),
+    currentBall: 0,
+    currentOver: 0,
+  });
   const [selectedTab, setSelectedTab] = useState("Next Bet");
   const [betAmount, setBetAmount] = useState();
   const { writeContract, error, status } = useWriteContract();
@@ -51,29 +57,46 @@ const MatchBet = () => {
   const predictionRef = useRef();
   const zoneRef = useRef();
 
+  useEffect(() => {
+    const handleUpdate = ({ generatedBetId, generatedBall, generatedOver }) => {
+      setCurrentValues({
+        currentBetId: generatedBetId,
+        currentBall: generatedBall,
+        currentOver: generatedOver,
+      });
+    };
+
+    dataEventEmitter.on('update', handleUpdate);
+
+    return () => {
+      dataEventEmitter.off('update', handleUpdate);
+    };
+  }, []);
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const betAmountInWei = Web3.utils.toBigInt(betAmount);
     const selectedPrediction = predictionRef.current.value === 'W' ? 10 : parseInt(predictionRef.current.value) ;
     const selectedZone = parseInt(zoneRef.current.value);
-    const selectedBall = parseInt(ballRef.current.value); // get from server
     const selectedOption = predictionZoneMap.find(
       (option) =>
         option.prediction === selectedPrediction && option.zone === selectedZone
     );
-    const betId = Number(totalBets.data) - 6 + selectedBall; // get from server
 
     if (selectedOption) {
       if (error) {
         alert(error.cause.reason);
       }
 
+      console.log(`BetId for bet : ${getGeneratedBetId()}`);
+
       writeContract({
         abi: CONTRACT_ABI,
         address: CONTRACT_ADDRESS,
         functionName: "bet",
-        args: [betAmountInWei, betId, selectedOption.optId,selectedZone,selectedBall+1,selectedPrediction],
+        args: [betAmountInWei, getGeneratedBetId(), selectedOption.optId,selectedZone,currentValues.currentOver,currentValues.currentBall,selectedPrediction],
       });
     } else {
       alert("Options not selected");
@@ -116,21 +139,6 @@ const MatchBet = () => {
             <img src={"./zones.png"} alt="Zones" className="mx-auto h-80 mb-5" />
             <form className="space-y-4 bg-gray-800 p-6 rounded-lg" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-2 gap-4">
-                  {/* <div>
-                    <label htmlFor="ballNumber" className="block text-sm font-medium text-white">
-                      Ball Number
-                    </label>
-                    <select id="ballNumber" required ref={ballRef} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-white">
-                    <option value="">Select Ball Number</option>
-                    <option value="0">Ball 1</option>
-                    <option value="1">Ball 2</option>
-                    <option value="2">Ball 3</option>
-                    <option value="3">Ball 4</option>
-                    <option value="4">Ball 5</option>
-                    <option value="5">Ball 6</option>
-                    </select>
-                  </div> */}
-
                   <div>
                     <label htmlFor="prediction" className="block text-sm font-medium text-white">
                       Prediction
