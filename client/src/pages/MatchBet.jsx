@@ -4,8 +4,8 @@ import MintRedeemInterface from "../components/MintRedeemInterface";
 import { useParams } from "react-router-dom";
 
 const MatchBet = () => {
-  const { id } = useParams();
-  console.log(id);
+  // const { id } = useParams();
+  // console.log(id);
   // const [matchData, setMatchData] = useState({})
   const [selectedTab, setSelectedTab] = useState("Your Bet");
 

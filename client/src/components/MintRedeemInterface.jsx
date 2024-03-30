@@ -1,48 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3'
 import { CONTRACT_ABI, CONTRACT_ADDRESS} from '../config.js';
+import { useReadContract, useWriteContract,useAccount } from 'wagmi';
 
 function MintRedeemInterface() {
+    const account = useAccount();
     const [isMinting, setIsMinting] = useState(true);
-    const [CRC, setCRC] = useState(0)
-    const [tCore, setTCore] = useState(0);
     const [mintInput, setMintInput] = useState(0);
     const [redeemInput, setRedeemInput] = useState(0);
-    let web3 = new Web3(window.ethereum);
 
-    const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+    const { writeContract,error,status } = useWriteContract();
 
-    const getTotalCRC = async () => {
-        const accounts = await window.ethereum.enable();
-        const account = accounts[0];
-        const balance = await contract.methods.balanceOf(account).call();
-        return balance;
-    };
-   
-    useEffect(()=>{
-        getTotalCRC().then(balance =>{
-            setCRC(balance);
-            setTCore(balance/1000);
-        })
-    },[]);
+    const CRCBalance = useReadContract({
+        address: CONTRACT_ADDRESS,
+        abi: CONTRACT_ABI,
+        functionName: 'balanceOf',
+        args: [account.address],
+    });
 
     const handleMint = async (CRCAmount) => {
-        const accounts = await window.ethereum.enable();
-        const account = accounts[0];
-        await contract.methods.mintCoins(CRCAmount).send({ from: account });
+        if(error){
+            alert(error.shortMessage)
+        }
+
+        writeContract({ 
+            abi:CONTRACT_ABI,
+            address: CONTRACT_ADDRESS,
+            functionName: 'mintCoins',
+            args: [CRCAmount],
+            value: Web3.utils.toWei(CRCAmount/1000, 'ether'),
+         })
     };
 
+    
     const handleRedeem = async (ethAmount) => {
-        const accounts = await window.ethereum.enable();
-        const account = accounts[0];
-        await contract.methods.convertCRCToEth(ethAmount).send({ from: account });
+        if(error){
+            alert(error.cause.reason)
+        }
+
+        writeContract({ 
+            abi:CONTRACT_ABI,
+            address: CONTRACT_ADDRESS,
+            functionName: 'convertCRCToEth',
+            args: [Web3.utils.toWei(ethAmount, 'ether')],
+         })
     };
 
     return (
         <div className='text-white p-4'>
             <div className='mb-4'>
                 <label className='inline-flex items-center'>
-                    <span className='ml-2'>Available CRC: {CRC} (= {tCore} tCOREs)</span>
+                    <span className='ml-2'>Available CRC: {Number(CRCBalance.data)} </span>
                 </label>
             </div>
             <div className='mb-4'>
@@ -58,7 +66,7 @@ function MintRedeemInterface() {
                             className='p-2 border rounded mr-2 flex-grow text-black'
                             onChange={e => setMintInput(e.target.value)}
                         />
-                        <button onClick={() => handleMint(CRC)} className='p-2 bg-green-500 text-white rounded'>Mint Coins</button>
+                        <button onClick={() => handleMint(mintInput)} className='p-2 bg-green-500 text-white rounded'>Mint Coins</button>
                     </div>
                 )}
             </div>
@@ -75,7 +83,7 @@ function MintRedeemInterface() {
                             className='p-2 border rounded mr-2 flex-grow text-black'
                             onChange={e => setRedeemInput(e.target.value)}
                         />
-                        <button onClick={() => handleRedeem(tCore)} className='p-2 bg-blue-500 text-white rounded'>Redeem</button>
+                        <button onClick={() => handleRedeem(redeemInput)} className='p-2 bg-blue-500 text-white rounded'>Redeem</button>
                     </div>
                 )}
             </div>
