@@ -64,4 +64,17 @@ export const response = [
     commentary:
       "A powerful shot by Ishan Kishan! The batsman smashes the ball over mid-wicket, picking up two runs with aggressive running between the wickets. The fielders are left stunned as the batsmen complete the runs comfortably. The crowd roars in appreciation as two more runs are added to the total.",
   },
+  {
+    betId: 5,
+    match: "MI vs CSK",
+    score: "160/2",
+    team1: "201/8",
+    over: 5,
+    ball: 5,
+    correctOptionId: 10,
+    zone: "3",
+    prediction: "6",
+    commentary:
+      "What a shot by Hardik Pandya! He smashes the ball over the long-on boundary for a massive six. The crowd goes wild as the ball sails over the ropes. A fantastic display of power hitting by Hardik Pandya.",
+  },
 ];
