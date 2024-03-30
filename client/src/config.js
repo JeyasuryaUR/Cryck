@@ -1,7 +1,4 @@
-import Arweave from 'arweave';
-
-export const arweave = Arweave.init({});
-export const CONTRACT_ADDRESS = "0x51442BdFE0f6A0f2BF5904F7b843936879f3baBE";
+export const CONTRACT_ADDRESS = "0xd4b1bbEb4C9a8d0beb551BEa2ddE7c9103A1D8A0";
 export const CONTRACT_ABI = [
 	{
 		"inputs": [],
@@ -72,6 +69,21 @@ export const CONTRACT_ABI = [
 			{
 				"internalType": "uint256",
 				"name": "_betOption",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_betZone",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_betBallNumber",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_betPrediction",
 				"type": "uint256"
 			}
 		],
@@ -152,32 +164,6 @@ export const CONTRACT_ABI = [
 		"name": "mintCoins",
 		"outputs": [],
 		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "previousOwner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -274,19 +260,6 @@ export const CONTRACT_ABI = [
 				"type": "bool"
 			}
 		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
@@ -446,13 +419,61 @@ export const CONTRACT_ABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "name",
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "getBetsByAddress",
 		"outputs": [
 			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
+				"components": [
+					{
+						"internalType": "bool",
+						"name": "isWon",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "betId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "reward",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "betZone",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "betAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "betOption",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "betBallNumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "betPrediction",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct Cryck.Bet[]",
+				"name": "bets",
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -460,12 +481,12 @@ export const CONTRACT_ABI = [
 	},
 	{
 		"inputs": [],
-		"name": "owner",
+		"name": "name",
 		"outputs": [
 			{
-				"internalType": "address",
+				"internalType": "string",
 				"name": "",
-				"type": "address"
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -529,13 +550,33 @@ export const CONTRACT_ABI = [
 				"internalType": "address",
 				"name": "",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"name": "userBets",
 		"outputs": [
 			{
+				"internalType": "bool",
+				"name": "isWon",
+				"type": "bool"
+			},
+			{
 				"internalType": "uint256",
 				"name": "betId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "reward",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "betZone",
 				"type": "uint256"
 			},
 			{
@@ -550,16 +591,16 @@ export const CONTRACT_ABI = [
 			},
 			{
 				"internalType": "uint256",
-				"name": "reward",
+				"name": "betBallNumber",
 				"type": "uint256"
 			},
 			{
-				"internalType": "bool",
-				"name": "isWon",
-				"type": "bool"
+				"internalType": "uint256",
+				"name": "betPrediction",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
 		"type": "function"
 	}
-];
+]

@@ -1,24 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { useReadContract } from 'wagmi';
+import { useReadContract, useWriteContract } from 'wagmi';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
 
 const RedeemBtn = ({ betId }) => {
-    const [isRedeemable, setIsRedeemable] = useState(false);
-    const { data } = useReadContract( {
+    const {writeContract,error,status} = useWriteContract();
+
+    const { data } = useReadContract({
         abi: CONTRACT_ABI,
         address: CONTRACT_ADDRESS,
         functionName: "canWithdrawTokens",
         args: [betId]
     });
 
-    useEffect(() => {
-        if (data) {
-            setIsRedeemable(data[0]);
+    const handleRedeem = async () =>{
+        if(error){
+            alert(error.cause.reason)
         }
-    }, [data]);
+
+        writeContract({ 
+            abi:CONTRACT_ABI,
+            address: CONTRACT_ADDRESS,
+            functionName: 'resolveBet',
+            args: [betId],
+         });
+    }
+
+    useEffect(() => {
+        if(status === "success"){
+            alert('Redeem Successful');
+        }
+    }, [status]);
 
     return (
-        <button disabled={!isRedeemable} className="px-4 py-2 bg-blue-500 text-white disabled:opacity-50">
+        <button disabled={!data} onClick={handleRedeem} className="px-4 py-2 bg-blue-500 text-white disabled:opacity-50">
             Redeem
         </button>
     );

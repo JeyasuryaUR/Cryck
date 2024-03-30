@@ -1,11 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
-import { background } from "../assets";
+import React, { useState, useRef } from "react";
 import MatchCard from "../components/MatchCard";
 import MintRedeemInterface from "../components/MintRedeemInterface";
-import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import { useReadContract, useWriteContract } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
 import Web3 from "web3";
-import { uploadDataWithKey } from "../utils/arweaveHelper";
 import YourBet from "../components/YourBet";
 
 const TabButton = ({ title, selectedTab, setSelectedTab, tabName }) => (
@@ -24,7 +22,6 @@ const TabButton = ({ title, selectedTab, setSelectedTab, tabName }) => (
 );
 
 const MatchBet = () => {
-  const account = useAccount();
   const [selectedTab, setSelectedTab] = useState("Next Bet");
   const [betAmount, setBetAmount] = useState();
   const { writeContract, error, status } = useWriteContract();
@@ -35,8 +32,8 @@ const MatchBet = () => {
     functionName: "totalBets",
   });
 
-  const predictions = ["4", "6", "W"];
-  const zones = Array.from({ length: 14 }, (_, i) => (i + 1).toString());
+  const predictions = [4, 6, 10];
+  const zones = Array.from({ length: 14 }, (_, i) => (i + 1));
 
   let optId = 1;
   const predictionZoneMap = [];
@@ -59,26 +56,14 @@ const MatchBet = () => {
     event.preventDefault();
 
     const betAmountInWei = Web3.utils.toBigInt(betAmount);
-    const selectedPrediction = predictionRef.current.value;
-    const selectedZone = zoneRef.current.value;
-    const selectedBall = ballRef.current.value;
+    const selectedPrediction = predictionRef.current.value === 'W' ? 10 : parseInt(predictionRef.current.value) ;
+    const selectedZone = parseInt(zoneRef.current.value);
+    const selectedBall = parseInt(ballRef.current.value);
     const selectedOption = predictionZoneMap.find(
       (option) =>
         option.prediction === selectedPrediction && option.zone === selectedZone
     );
-    const betId = Number(totalBets.data) - 6 + parseInt(selectedBall);
-
-    const dataForArweave = {
-      betId,
-      betAmount,
-      selectedZone,
-      selectedBall,
-      selectedOption,
-      selectedPrediction,
-      overNumber: totalBets / 6,
-    };
-
-    await uploadDataWithKey(account, dataForArweave);
+    const betId = Number(totalBets.data) - 6 + selectedBall;
 
     if (selectedOption) {
       if (error) {
@@ -89,7 +74,7 @@ const MatchBet = () => {
         abi: CONTRACT_ABI,
         address: CONTRACT_ADDRESS,
         functionName: "bet",
-        args: [betAmountInWei, betId, selectedOption.optId],
+        args: [betAmountInWei, betId, selectedOption.optId,selectedZone,selectedBall+1,selectedPrediction],
       });
     } else {
       alert("Options not selected");
