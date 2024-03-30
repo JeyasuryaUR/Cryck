@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { response } from "../data";
+import { useWriteContract } from "wagmi";
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
 
 const MatchCard = () => {
   const [commentary, setCommentary] = useState(response[0].commentary);
   const [score, setScore] = useState(response[0].score);
   const [ballsLeft, setBallsLeft] = useState(62);
+  const { send } = useWriteContract(CONTRACT_ADDRESS, CONTRACT_ABI, 'uploadAnswerForBet');
 
   useEffect(() => {
     let i = 0;
@@ -13,6 +16,9 @@ const MatchCard = () => {
       setCommentary(response[i].commentary);
       setScore(response[i].score);
       setBallsLeft(ballsLeft - 1);
+      const betId = response[i].betId;
+      const optionId = response[i].correctOptionId;
+      send(betId, optionId);
       if (i === response.length - 1) {
         clearInterval(interval);
       }
@@ -77,7 +83,7 @@ const MatchCard = () => {
           Commentary
         </div>
         <div className="justify-center py-1.5 mt-6 text-lg bg-black">
-          {/* {commentary} */}Yoo
+          {commentary}
         </div>
       </div>
     </div>
