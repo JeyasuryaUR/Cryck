@@ -26,7 +26,7 @@ const YourBet = () => {
                     <tr>
                         <th className="px-6 py-2">Over</th>
                         <th className="px-6 py-2">Ball Number</th>
-                        <th className="px-6 py-2">Score</th>
+                        <th className="px-6 py-2">Prediction</th>
                         <th className="px-6 py-2">Zone</th>
                         <th className="px-6 py-2">Bet Amount</th>
                         <th className="px-6 py-2">Redeem</th>
