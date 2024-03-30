@@ -47,7 +47,7 @@ function MintRedeemInterface() {
     };
 
     return (
-        <div className='text-white p-4'>
+        <div className='text-white p-4 h-[650px]'>
             <div className='mb-4'>
                 <label className='inline-flex items-center'>
                     <span className='ml-2'>Available CRC: {Number(CRCBalance.data)} </span>

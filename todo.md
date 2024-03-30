@@ -1,3 +1,4 @@
-2  your bet
-3. redeem bet 
-4. upload answer
+1. Create server
+2. Get data from server
+3. Generate random betId
+4. 

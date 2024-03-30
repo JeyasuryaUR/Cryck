@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { response } from "../data";
-import { callUploadAnswerForBet } from "../utils/sendTx";
+
 
 const MatchCard = () => {
   console.log(response);
@@ -18,7 +18,6 @@ const MatchCard = () => {
       const betId = response[i].betId;
       const optionId = response[i].correctOptionId;
       
-      callUploadAnswerForBet(parseInt(betId),parseInt(optionId))
       if (i === response.length - 1) {
         clearInterval(interval);
       }
