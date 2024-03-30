@@ -1,26 +1,41 @@
 import React, { useState, useRef } from "react";
 import MatchCard from "../components/MatchCard";
 import MintRedeemInterface from "../components/MintRedeemInterface";
+import { useParams } from "react-router-dom";
 
 const MatchBet = () => {
+  const { id } = useParams();
+  console.log(id);
+  const [matchData, setMatchData] = useState({})
   const [selectedTab, setSelectedTab] = useState("Your Bet");
 
   const predictions = ["4", "6", "W"];
   const zones = Array.from({length: 14}, (_, i) => (i + 1).toString());
 
-  let id = 1;
+  let optId = 1;
   const predictionZoneMap = [];
 
   for (let prediction of predictions) {
     for (let zone of zones) {
       predictionZoneMap.push({
-        id: id++,
+        optId: optId++,
         prediction,
         zone
       });
     }
   }
-  //console.log(predictionZoneMap);
+
+  fetch(`https://api.cricapi.com/v1/match_info?apikey=e7ebe5f5-b5c9-4f87-8a1f-925d47378409&id=8aac46d6-fdd5-453b-afbf-01b12fda1fc9`)
+        .then(response => 
+           response.json()
+        )
+        .then(data =>{
+          console.log(data);
+           setMatchData(data);
+        });
+  
+  
+    // console.log(matchData);
 
   const predictionRef = useRef();
   const zoneRef = useRef();
@@ -35,7 +50,7 @@ const MatchBet = () => {
 
     if (selectedOption) {
 
-      //console.log(`The id for prediction ${selectedPrediction} and zone ${selectedZone} is ${selectedOption.id}`);
+      //console.log(`The optId for prediction ${selectedPrediction} and zone ${selectedZone} is ${selectedOption.optId}`);
     } else {
       //console.log(`No option found for prediction ${selectedPrediction} and zone ${selectedZone}`);
     }
@@ -44,7 +59,7 @@ const MatchBet = () => {
   return (
     <div className="flex bg-black">
       <div className="w-[50%]">
-        <MatchCard />
+        <MatchCard matchData={matchData} />
       </div>
       <div className="w-[50%] bg-black">
         <div className="flex w-full bg-gray-900">
@@ -118,7 +133,7 @@ const MatchBet = () => {
         )}
         {selectedTab === "Your Bet" && (
           <div className="h-[500px]">
-            {/* Next Bet content goes here */}
+            {/* Your Bet content goes here */}
           </div>
         )}
         {selectedTab === "Mint CRC" && (

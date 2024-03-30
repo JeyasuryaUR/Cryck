@@ -16,6 +16,7 @@ import {
   QueryClientProvider,
   QueryClient,
 } from "@tanstack/react-query";
+import AllMatches from "./pages/AllMatches.jsx";
 
 const coreDaoTestnet = {
   id: 1115,
@@ -49,9 +50,13 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/match",
-        element: <MatchBet />,
+        path: "/play",
+        element: <AllMatches />,
       },
+    {
+        path: "/match/:id",
+        element: <MatchBet />,
+    },
     ],
   },
 ]);
