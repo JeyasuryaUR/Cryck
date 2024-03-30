@@ -2,17 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { background } from "../assets";
 import MatchCard from "../components/MatchCard";
 import MintRedeemInterface from "../components/MintRedeemInterface";
-<<<<<<< Updated upstream
 import RedeemBtn from "../components/RedeemBtn";
-import { useReadContract, useWriteContract } from "wagmi";
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
-import Web3 from "web3";
-=======
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../config";
 import Web3 from 'web3'
 import { uploadDataWithKey } from "../utils/arweaveHelper";
->>>>>>> Stashed changes
 
 const MatchBet = () => {
   const account =  useAccount();
