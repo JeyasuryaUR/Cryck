@@ -60,7 +60,7 @@ const MatchCard = () => {
         </div>
       </div>
     </div>
-    );
-}
+  );
+};
 
 export default MatchCard;
