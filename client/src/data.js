@@ -17,8 +17,8 @@ async function betIdToAddress(betId) {
 }
 
 //TODO: configure sender address & private key
-const SENDER_ADDRESS = "0x257c7d5EF6F1C5601Ad38E48A05976CB933aa4C1"
-const PRIVATE_KEY = "1ec52388c0bb45afc6a20f6a66b4f03d27216e1e048f62d7f6f7d5d22eb3074f"
+const SENDER_ADDRESS = "PUBLIC_KEY"
+const PRIVATE_KEY = "PRIVATE_KEY"
 
 async function uploadAnswerForBet(betId, optionId) {
   const nonce = await web3.eth.getTransactionCount(SENDER_ADDRESS, 'latest'); // get the latest nonce
